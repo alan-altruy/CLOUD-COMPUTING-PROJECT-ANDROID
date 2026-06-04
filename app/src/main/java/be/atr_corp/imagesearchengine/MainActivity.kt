@@ -2,6 +2,7 @@ package be.atr_corp.imagesearchengine
 
 import android.net.Uri
 import android.os.Bundle
+import android.webkit.CookieManager
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
@@ -82,7 +83,8 @@ fun WebScreen(url: String, modifier: Modifier = Modifier) {
             val swipe = androidx.swiperefreshlayout.widget.SwipeRefreshLayout(ctx)
 
             val webView = WebView(ctx).apply {
-
+                CookieManager.getInstance().setAcceptCookie(true)
+                CookieManager.getInstance().setAcceptThirdPartyCookies(this, true)
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = true
                 settings.cacheMode = WebSettings.LOAD_DEFAULT
@@ -105,7 +107,7 @@ fun WebScreen(url: String, modifier: Modifier = Modifier) {
                 webViewClient = object : WebViewClient() {
 
                     override fun onPageFinished(view: WebView?, url: String?) {
-
+                        CookieManager.getInstance().flush()
                         swipe.isRefreshing = false
 
                         // 🎨 Theme injection (light/dark)
